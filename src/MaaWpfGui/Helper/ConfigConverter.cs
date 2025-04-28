@@ -133,6 +133,8 @@ public class ConfigConverter
                 startUpTask.AccountName = ConfigurationHelper.GetValue(ConfigurationKeys.AccountName, string.Empty);
                 ConfigurationHelper.DeleteValue(ConfigurationKeys.AccountName, out _);
 
+                fightTask.UseMedicine = ConfigurationHelper.GetValue(ConfigurationKeys.UseMedicine, false);
+
                 fightTask2.Stage1 = ConfigurationHelper.GetValue(ConfigurationKeys.RemainingSanityStage, string.Empty);
                 ConfigurationHelper.DeleteValue(ConfigurationKeys.RemainingSanityStage, out _);
 
