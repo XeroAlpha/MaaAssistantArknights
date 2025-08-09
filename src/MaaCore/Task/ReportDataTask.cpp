@@ -138,15 +138,29 @@ void asst::ReportDataTask::report_to_penguin()
 
     // 重新向企鹅物流统计的 CN 域名发送数据
     constexpr std::string_view Penguin_IO = "https://penguin-stats.io";
-    // https://penguin-stats.alvorna.com: G找朋友开的代理，仅可以代理 API 请求。
-    // 实际的网站访问请前往 https://penguin-stats.cn
-    // constexpr std::string_view Penguin_CN = "https://penguin-stats.cn";
-    constexpr std::string_view Penguin_CN_PROXY = "https://penguin-stats.alvorna.com";
     if (url.find(Penguin_IO) == std::string::npos) {
         return;
     }
-    Log.info("Re-report to penguin-stats.alvorna.com", Penguin_CN_PROXY);
-    std::string new_url = utils::string_replace_all(url, Penguin_IO, Penguin_CN_PROXY);
+    std::string new_url;
+    // https://penguin-stats.alvorna.com: G找朋友开的代理，仅可以代理 API 请求。
+    // 实际的网站访问请前往 https://penguin-stats.cn
+    // constexpr std::string_view Penguin_CN = "https://penguin-stats.cn";
+    constexpr std::string_view Penguin_CN_PROXY_1 = "https://penguin-stats.alvorna.com";
+    Log.info("Re-report to penguin-stats.alvorna.com", Penguin_CN_PROXY_1);
+    new_url = utils::string_replace_all(url, Penguin_IO, Penguin_CN_PROXY_1);
+
+    backoff = DefaultBackoff;
+    response = report(PenguinSubtaskName, new_url, headers, timeout, penguin_success_cond, penguin_retry_cond);
+
+    if (response.status_code == 200) {
+        proc_response_id();
+        return;
+    }
+
+    // https://penguin-stats.projectxero.top: 某群友部署的镜像站。
+    constexpr std::string_view Penguin_CN_PROXY_2 = "https://penguin-stats.projectxero.top";
+    Log.info("Re-report to penguin-stats.projectxero.top", Penguin_CN_PROXY_2);
+    new_url = utils::string_replace_all(url, Penguin_IO, Penguin_CN_PROXY_2);
 
     backoff = DefaultBackoff;
     response = report(PenguinSubtaskName, new_url, headers, timeout, penguin_success_cond, penguin_retry_cond);
